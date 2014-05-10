@@ -21,42 +21,61 @@ function getValue(xp,doc){
     }
   });
 
-  if(ret.length===1){
+  if(ret.length===0){
+    return undefined
+  }
+  else if(ret.length===1){
     return ret[0]
   }else{
     return ret
   }
+
+};
+
+function recur(p,doc){
+  return _reduce(p,function(m,v,k){
+    if(typeof v === 'string'){
+      m[k] = getValue(v,doc);
+      
+    }else{
+      m[k] = recur(v,doc);
+    }
+    return m
+  },{});
 };
 
 function main(){
   var args = [].slice.call(arguments);
   var p1 = args[0];
   var p2 = args[1];
-  var buf = [];
+  var buf = new Buffer('');
 
   return through2.obj(function(c,e,next){
-    buf.push(c+'');
+    buf += c;
     next();
-  },function(){
-    
+  },function(n){
     var result;
-    var xml = buf.join();
-    var doc = new Dom().parseFromString(xml);
+    var xml = buf;
+    
+    try{
+      var doc = new Dom().parseFromString(xml);
 
-    if(p2===undefined){
-      result = getValue(p1,doc);
+      if(p2===undefined){
+        result = getValue(p1,doc);
+      }
+      else{
+        result = _map(getValue(p1,doc),function(o){
+          return recur(p2,o);
+        });
+      }
+      
+      this.push(result);
+    }catch(e){
+      // through when error
+      this.push(xml);
     }
-    else{
-      result = _map(getValue(p1,doc),function(o){
-        return _reduce(p2,function(m,v,k){
-          m[k] = getValue(v,o);
-          return m
-        },{});
-      });
-    }
-
-    this.push(result);
-    this.push(null);
+    
+    n();
   });
 
 };
