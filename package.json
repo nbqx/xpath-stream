@@ -1,0 +1,26 @@
+{
+  "name": "xpath-stream",
+  "description": "xpath transform stream",
+  "version": "0.0.1",
+  "author": "nbqx",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nbqx/xpath-stream.git"
+  },
+  "homepage": "https://github.com/nbqx/xpath-stream",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "xmldom": "^0.1.19",
+    "xpath": "0.0.6",
+    "through2": "^0.4.1",
+    "lodash.reduce": "^2.4.1",
+    "lodash.map": "^2.4.1"
+  },
+  "devDependencies": {
+    "tape": "^2.12.3"
+  }
+}
