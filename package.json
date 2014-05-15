@@ -2,6 +2,7 @@
   "name": "xpath-stream",
   "description": "xpath transform stream",
   "version": "0.0.2",
+  "bin": "bin/cmd.js",
   "author": "nbqx",
   "repository": {
     "type": "git",
@@ -18,7 +19,9 @@
     "xpath": "0.0.6",
     "through2": "^0.4.1",
     "lodash.reduce": "^2.4.1",
-    "lodash.map": "^2.4.1"
+    "lodash.map": "^2.4.1",
+    "yargs": "^1.2.2",
+    "cli-color": "^0.3.2"
   },
   "devDependencies": {
     "tape": "^2.12.3"

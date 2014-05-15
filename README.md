@@ -66,3 +66,18 @@ xml.pipe(xpathStream("//item",{
   console.log(JSON.stringify(node));
 });
 ```
+
+## Bonus
+
+    $ npm install -g xpath-stream
+
+
+then
+
+    $ xpath-stream "//articles/article[position()=1]/node()" test.xml
+
+or
+
+    $ cat test.xml | xpath-stream "//articles/article[position()=1]/node()"
+
+
