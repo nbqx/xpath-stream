@@ -7,13 +7,17 @@ var argv = require('yargs').argv;
 var clc = require('cli-color');
 
 function _view(data){
-  try{
-    data = data.map(function(d){ 
-      return d.toString().replace(/\r\n|\r|\n|\t/g,'')
-    }).filter(function(d){return d!==''});
-    console.log(data.join("\n"));
-  }catch(x_x){
-    console.log(clc.red('[Error]: xpath error'));
+  if(typeof data == 'string'){
+    console.log(data);
+  }else{
+    if(data.length!==undefined){
+      data = data.map(function(d){ 
+        return d.toString().replace(/\r\n|\r|\n|\t/g,'')
+      }).filter(function(d){return d!==''});
+      console.log(data.join("\n"));
+    }else{
+      console.log(data.toString());
+    }
   }
 };
 
