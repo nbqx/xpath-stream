@@ -74,7 +74,7 @@ xml.pipe(xpathStream("//item",{
 
 then
 
-    $ xpath-stream "//articles/article[position()=1]/node()" test.xml
+    $ xpath-stream "//root/node()" < test.xml
 
 or
 
