@@ -24,6 +24,15 @@ var xml = [
 '</items>'
 ].join('');
 
+test('xpath parse error',function(t){
+  testStream(xml)
+    .pipe(xpath("//item/name/"))
+    .on('error',function(e){
+      t.ok(e.message,'XPath parse error');
+      t.end();
+    });
+});
+
 test('text node',function(t){
   testStream(xml)
     .pipe(xpath("//item/name/text()"))

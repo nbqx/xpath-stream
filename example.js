@@ -25,7 +25,8 @@ var xml = testStream([
 // text node
 xml
   .pipe(xpathStream("//item/name/text()"))
-  .on('data',console.log);
+  .on('data',console.log)
+  .on('error',console.log)
 
 // attribute value
 xml

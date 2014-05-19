@@ -70,7 +70,7 @@ function main(){
       }
       this.push(result);
     }catch(e){
-      console.log(e);
+      this.emit('error',e);
     }
     
     n();
