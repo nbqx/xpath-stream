@@ -23,4 +23,7 @@ if(argv._.length!==1){
       }
     }
   })
+  .on('error',function(e){
+    console.log(e);
+  })
 }
