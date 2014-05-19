@@ -68,11 +68,9 @@ function main(){
           return recur(p2,o);
         });
       }
-      
       this.push(result);
     }catch(e){
-      // through when error
-      this.push(xml);
+      console.log(e);
     }
     
     n();
