@@ -1,7 +1,7 @@
 {
   "name": "xpath-stream",
   "description": "xpath transform stream",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "bin": "bin/cmd.js",
   "author": "nbqx",
   "repository": {

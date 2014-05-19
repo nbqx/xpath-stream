@@ -12,5 +12,7 @@ if(argv._.length!==1){
 }else{
   process.stdin
     .pipe(xpath(argv._[0]))
-    .pipe(process.stdout);
+  .on('data',function(data){
+    console.log(JSON.stringify(data));
+  })
 }
