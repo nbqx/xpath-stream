@@ -80,4 +80,6 @@ or
 
     $ cat test.xml | xpath-stream "//articles/article[position()=1]/node()"
 
+with namespace
 
+    $ xpath-stream --namespace=ns:http://example.com/ns "//ns:item[@ns:id='5A23']" < ./test/test.xml
