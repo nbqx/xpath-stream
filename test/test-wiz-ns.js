@@ -11,22 +11,22 @@ function testStream(str){
 };
 
 var xml = [
-'<items>',
-  '<item id="1">',
-    '<name type="001">item1</name>',
-    '<price>5000</price>',
-    '<nest>',
-      '<data>nested</data>',
-      '<nest2><data>nested2</data></nest2>',
-    '</nest>',
-  '</item>',
-  '<item id="2"><name type="002">item2</name><price>1000</price></item>',
+'<items xmlns:ns="http://example.com/test">',
+  '<ns:item ns:id="1">',
+    '<ns:name ns:type="001">item1</ns:name>',
+    '<ns:price>5000</ns:price>',
+    '<ns:nest>',
+      '<ns:data>nested</ns:data>',
+      '<ns:nest2><ns:data>nested2</ns:data></ns:nest2>',
+    '</ns:nest>',
+  '</ns:item>',
+  '<ns:item ns:id="2"><ns:name ns:type="002">item2</ns:name><ns:price>1000</ns:price></ns:item>',
 '</items>'
 ].join('');
 
 test('xpath parse error',function(t){
   testStream(xml)
-    .pipe(xpath("//item/name/"))
+    .pipe(xpath("//ns:item/ns:name/",null,{"ns": "http://example.com/test"}))
     .on('error',function(e){
       t.ok(e.message,'XPath parse error');
       t.end();
@@ -35,7 +35,7 @@ test('xpath parse error',function(t){
 
 test('text node',function(t){
   testStream(xml)
-    .pipe(xpath("//item/name/text()"))
+    .pipe(xpath("//ns:item/ns:name/text()",null,{"ns": "http://example.com/test"}))
     .on('data',function(data){
       t.ok(data.indexOf('item1')>-1,'has item1');
       t.ok(data.indexOf('item2')>-1,'has item2');
@@ -45,7 +45,7 @@ test('text node',function(t){
 
 test('attribute value',function(t){
   testStream(xml)
-    .pipe(xpath("//item/@id"))
+    .pipe(xpath("//ns:item/@ns:id",null,{"ns": "http://example.com/test"}))
     .on('data',function(data){
       t.ok(data.indexOf('1')>-1,'has 1');
       t.ok(data.indexOf('2')>-1,'has 2');
@@ -55,7 +55,7 @@ test('attribute value',function(t){
 
 test('xmldom object',function(t){
   testStream(xml)
-    .pipe(xpath("//item"))
+    .pipe(xpath("//ns:item",null,{"ns": "http://example.com/test"}))
     .on('data',function(data){
       t.notOk(typeof data[0] === 'string','should be Object');
       t.end();
@@ -63,19 +63,19 @@ test('xmldom object',function(t){
 });
 
 test('object',function(t){
-  testStream(xml).pipe(xpath("//item",{
-    id: "./@id",
-    type: "name/@type",
-    name: "name/text()",
-    price: "price/text()",
+  testStream(xml).pipe(xpath("//ns:item",{
+    id: "./@ns:id",
+    type: "ns:name/@ns:type",
+    name: "ns:name/text()",
+    price: "ns:price/text()",
     nest: {
-      data: "nest/data/text()",
-      data2: "nest/nest2/data/text()",
+      data: "ns:nest/ns:data/text()",
+      data2: "ns:nest/ns:nest2/ns:data/text()",
       deepNest: {
-        deepData: "nest/nest2/data/text()"
+        deepData: "ns:nest/ns:nest2/ns:data/text()"
       }
     }
-  }))
+  },{"ns": "http://example.com/test"}))
   .on('data',function(node){
     t.deepEqual(node[0],{
       id: "1",

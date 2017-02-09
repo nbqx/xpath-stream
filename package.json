@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "xmldom": "^0.1.19",
-    "xpath": "0.0.6",
+    "xpath": "0.0.23",
     "through2": "^0.4.1",
     "lodash.reduce": "^2.4.1",
     "lodash.map": "^2.4.1",

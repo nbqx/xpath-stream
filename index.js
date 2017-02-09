@@ -6,20 +6,39 @@ var Dom = require('xmldom').DOMParser,
 
 module.exports = main;
 
-function getValue(xp,doc){
-  var ret =  _map(xpath.select(xp,doc),function(n){
-    // text
-    if(n.data!==undefined){
-      return n.toString()
-    }
-    // attribute
-    else if(n.value!==undefined){
-      return n.value
-    }
-    else{
-      return n
-    }
-  });
+function getValue(xp,doc,ns){
+  var ret;
+
+  if(ns==null){
+    ret =  _map(xpath.select(xp,doc),function(n){
+      // text
+      if(n.data!==undefined){
+        return n.toString()
+      }
+      // attribute
+      else if(n.value!==undefined){
+        return n.value
+      }
+      else{
+        return n
+      }
+    });
+  }else{
+    var select = xpath.useNamespaces(ns);
+    ret =  _map(select(xp,doc),function(n){
+      // text
+      if(n.data!==undefined){
+        return n.toString()
+      }
+      // attribute
+      else if(n.value!==undefined){
+        return n.value
+      }
+      else{
+        return n
+      }
+    });
+  }
 
   if(ret.length===0){
     return undefined
@@ -32,13 +51,12 @@ function getValue(xp,doc){
 
 };
 
-function recur(p,doc){
+function recur(p,doc,ns){
   return _reduce(p,function(m,v,k){
     if(typeof v === 'string'){
-      m[k] = getValue(v,doc);
-      
+      m[k] = getValue(v,doc,ns);
     }else{
-      m[k] = recur(v,doc);
+      m[k] = recur(v,doc,ns);
     }
     return m
   },{});
@@ -47,7 +65,8 @@ function recur(p,doc){
 function main(){
   var args = [].slice.call(arguments);
   var p1 = args[0];
-  var p2 = args[1];
+  var p2 = args[1] || null;
+  var p3 = args[2] || null; // namespace
   var buf = new Buffer('');
 
   return through2.obj(function(c,e,next){
@@ -56,23 +75,24 @@ function main(){
   },function(n){
     var result;
     var xml = buf;
-    
+
     try{
       var doc = new Dom().parseFromString(xml);
 
-      if(p2===undefined){
-        result = getValue(p1,doc);
+      if(p2===null){
+        result = getValue(p1,doc,p3);
       }
       else{
-        result = _map(getValue(p1,doc),function(o){
-          return recur(p2,o);
+        result = _map(getValue(p1,doc,p3),function(o){
+          return recur(p2,o,p3);
         });
       }
       this.push(result);
-    }catch(e){
+    }
+    catch(e){
       this.emit('error',e);
     }
-    
+
     n();
   });
 

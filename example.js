@@ -1,4 +1,4 @@
-var xpathStream = require('.');
+var xpathStream = require('./');
 
 // string stream
 var Readable = require('stream').Readable;
@@ -55,4 +55,3 @@ xml.pipe(xpathStream("//item",{
 .on('data',function(node){
   console.log(JSON.stringify(node));
 });
-
